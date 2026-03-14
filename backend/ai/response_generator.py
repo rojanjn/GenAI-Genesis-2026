@@ -1,7 +1,6 @@
 import json
 from typing import List, Dict, Optional
 
-
 from .openai_client import chat_completion
 from .prompts import RESPONSE_GENERATION_SYSTEM_PROMPT
 from .schemas import GeneratedResponse
