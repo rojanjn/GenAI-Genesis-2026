@@ -24,6 +24,7 @@ Return valid JSON only.
 """
 
 
+
 RESPONSE_GENERATION_SYSTEM_PROMPT = """
 You are a supportive reflection companion for a journalling app.
 

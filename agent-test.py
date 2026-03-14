@@ -21,19 +21,22 @@ import asyncio
 import logging
 import os
 import sys
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s  %(message)s")
 logger = logging.getLogger(__name__)
 
 #API Keys
-os.environ.setdefault("BACKBOARD_API_KEY", "test")
-os.environ.setdefault("OPENAI_API_KEY", "test")
+BACKBOARD_API_KEY = os.getenv("BACKBOARD_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Works whether run as `python3 -m ai.test_agent` or `python3 test_agent.py`
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from ai.agent import run_agent_loop
-from ai.memory import get_or_create_assistant
+from backend.ai.agent import run_agent_loop
+from backend.ai.memory import get_or_create_assistant
 
 
 ASSISTANT_ID = os.getenv("TEST_ASSISTANT_ID", "de236e2d-ba82-44a4-9ba6-48a83404682a")
