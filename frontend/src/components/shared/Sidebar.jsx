@@ -1,11 +1,11 @@
 import styles from './Sidebar.module.css';
 
 const NAV_ITEMS = [
-    { icon: '⌂', label: 'Home', path: '/' },
-    { icon: '📓', label: 'Journal', path: '/journal' },
-    { icon: '📅', label: 'Sessions', path: '/sessions' },
-    { icon: '✦', label: 'Exercises', path: '/exercises' },
-    { icon: '◎', label: 'Progress', path: '/progress' },
+    { icon: '🏠', label: 'Home', path: '/' },
+    { icon: '📝', label: 'Journal', path: '/journal' },
+    { icon: '📆', label: 'Sessions', path: '/sessions' },
+    { icon: '⭐', label: 'Exercises', path: '/exercises' },
+    { icon: '📊', label: 'Progress', path: '/progress' },
 ];
 
 const JOURNALS = [

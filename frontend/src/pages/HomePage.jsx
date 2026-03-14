@@ -2,6 +2,8 @@ import styles from './HomePage.module.css';
 import StatCard from '../features/home/components/StatCard.jsx';
 import MoodCheckIn from '../features/home/components/MoodCheckIn.jsx';
 import JournalPrompt from '../features/home/components/JournalPrompt.jsx';
+import ExerciseList from '../features/home/components/ExerciseList.jsx';
+import ProgressTracker from '../features/home/components/ProgressTracker.jsx';
 
 const STATS = [
   { label: 'Check-in streak', value: '2', sub: '↑ days in a row', positive: true },
@@ -46,6 +48,8 @@ const HomePage = () => {
       <div className={styles.contentGrid}>
         <MoodCheckIn />
         <JournalPrompt />
+        <ExerciseList />
+        <ProgressTracker />
       </div>
 
     </div>
