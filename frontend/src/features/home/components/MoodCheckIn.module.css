@@ -1,0 +1,130 @@
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.title {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.link {
+    font-size: 11px;
+    color: var(--color-green-dark);
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.prompt {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-style: italic;
+    color: var(--color-text-primary);
+    line-height: 1.4;
+    margin-bottom: 18px;
+}
+
+/* Mood buttons */
+.moodRow {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.moodBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    min-width: 62px;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.moodBtn:hover {
+    background: var(--color-green-pale);
+    border-color: var(--color-green-mid);
+}
+
+.moodBtn.selected {
+    background: var(--color-green-pale);
+    border-color: var(--color-green-mid);
+}
+
+.emoji {
+    font-size: 22px;
+}
+
+.moodLabel {
+    font-size: 11px;
+    color: var(--color-text-secondary);
+}
+
+.moodBtn.selected .moodLabel {
+    color: var(--color-green-dark);
+    font-weight: 500;
+}
+
+/* Note */
+.note {
+    width: 100%;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--color-text-primary);
+    resize: none;
+    height: 64px;
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 14px;
+}
+
+.note:focus {
+    border-color: var(--color-green-mid);
+}
+
+.note::placeholder {
+    color: var(--color-border);
+}
+
+/* Save button */
+.saveBtn {
+    background: var(--color-green-dark);
+    color: var(--color-green-text);
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: opacity 0.15s;
+}
+
+.saveBtn:hover {
+    opacity: 0.85;
+}
+
+.saveBtn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
