@@ -1,0 +1,230 @@
+.page {
+    min-height: 100vh;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 32px 40px 24px;
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    background: var(--color-bg);
+    z-index: 10;
+}
+
+.label {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.title {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--color-text-primary);
+}
+
+.title em {
+    color: var(--color-green-mid);
+    font-style: italic;
+}
+
+.content {
+    padding: 28px 40px;
+}
+
+/* Stats */
+.statsGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+}
+
+.statCard {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 16px 18px;
+    height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-card);
+}
+
+.statLabel {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.statValue {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    color: var(--color-text-primary);
+    line-height: 1;
+}
+
+.statSub {
+    font-size: 11px;
+    color: var(--color-green-mid);
+}
+
+/* Cards */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 24px;
+    box-shadow: var(--shadow-card);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.cardTitle {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.cardSub {
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
+
+/* Mood chart */
+.chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    height: 160px;
+    padding-bottom: 28px;
+    position: relative;
+}
+
+.bar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+}
+
+.barInner {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    background: var(--color-border-light);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.barFill {
+    width: 100%;
+    background: linear-gradient(180deg, var(--color-green-mid), var(--color-green-dark));
+    border-radius: var(--radius-sm);
+    transition: height 0.4s ease;
+}
+
+.barVal {
+    font-size: 10px;
+    color: var(--color-text-muted);
+}
+
+.barDay {
+    font-size: 10px;
+    color: var(--color-text-muted);
+    position: absolute;
+    bottom: 0;
+}
+
+/* Goals */
+.goalBlock {
+    margin-bottom: 18px;
+}
+
+.goalRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.goalLabel {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.goalVal {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-green-dark);
+}
+
+.barBg {
+    width: 100%;
+    height: 5px;
+    background: var(--color-border-light);
+    border-radius: var(--radius-pill);
+}
+
+.barProgress {
+    height: 5px;
+    border-radius: var(--radius-pill);
+    background: linear-gradient(90deg, var(--color-green-dark), var(--color-green-mid));
+    transition: width 0.4s ease;
+}
+
+/* Calendar */
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+}
+
+.calDay {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--color-text-muted);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+}
+
+.calDone {
+    background: var(--color-green-pale);
+    border-color: var(--color-green-mid);
+    color: var(--color-green-dark);
+    font-weight: 500;
+}
+
+.calToday {
+    background: var(--color-green-dark);
+    border-color: var(--color-green-dark);
+    color: var(--color-green-text);
+    font-weight: 600;
+}

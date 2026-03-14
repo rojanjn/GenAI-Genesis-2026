@@ -2,6 +2,7 @@ import StarterKit from '@tiptap/starter-kit';
 import { useEditor, EditorContent } from '@tiptap/react';
 import { useState } from 'react';
 import styles from './JournalEditor.module.css';
+import { saveJournalEntry, getProgress, updateProgress } from '../../../utils/storage';
 
 const PROMPTS = [
     "What's one thing weighing on your mind that you haven't said out loud yet?",
@@ -99,7 +100,14 @@ const JournalEditor = () => {
 
     const handleSave = () => {
         if (isEmpty) return;
-        console.log({ prompt: PROMPTS[promptIndex], entry: editor.getHTML() });
+        saveJournalEntry(PROMPTS[promptIndex], editor.getHTML());
+
+        const progress = getProgress();
+        updateProgress({
+            journalCount: progress.journalCount + 1,
+            weeklyJournals: progress.weeklyJournals + 1,
+        });
+
         setSaved(true);
     };
 
