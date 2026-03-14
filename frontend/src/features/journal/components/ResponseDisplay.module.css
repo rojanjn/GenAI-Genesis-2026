@@ -1,0 +1,269 @@
+.responseContainer {
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header h2 {
+    font-size: 1.75rem;
+    color: #2c3e50;
+    margin: 0 0 0.5rem 0;
+}
+
+.subtitle {
+    color: #7f8c8d;
+    font-size: 1rem;
+    margin: 0;
+}
+
+/* Mood Section */
+.moodSection {
+    margin-bottom: 2rem;
+}
+
+.moodCard {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-left: 4px solid #95E1D3;
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.moodHeader {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.moodEmoji {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+}
+
+.moodText {
+    flex: 1;
+}
+
+.emotion {
+    font-size: 1.25rem;
+    color: #2c3e50;
+    margin: 0 0 0.25rem 0;
+}
+
+.reasoning {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.moodDetails {
+    margin-top: 1rem;
+}
+
+.intensityBar {
+    background: #ecf0f1;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.intensityFill {
+    height: 100%;
+    transition: width 0.5s ease;
+}
+
+.intensityLabel {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+/* Safety Alert */
+.safetyAlert {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.safetyIcon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.safetyText {
+    flex: 1;
+}
+
+.safetyTitle {
+    font-weight: 600;
+    color: #856404;
+    margin: 0 0 0.5rem 0;
+}
+
+.safetyMessage {
+    color: #856404;
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Response Section */
+.responseSection {
+    margin-bottom: 2rem;
+}
+
+.responseTitle {
+    font-size: 1rem;
+    color: #2c3e50;
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+}
+
+.responseBox,
+.questionBox,
+.suggestionBox {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.responseBox {
+    border-left: 4px solid #95E1D3;
+}
+
+.responseText {
+    color: #2c3e50;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.questionBox {
+    border-left: 4px solid #FFD93D;
+    background: #fffbf0;
+}
+
+.questionLabel {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+}
+
+.questionText {
+    color: #2c3e50;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+    font-style: italic;
+}
+
+.suggestionBox {
+    border-left: 4px solid #FF6B6B;
+    background: #fff0f0;
+}
+
+.suggestionLabel {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+}
+
+.suggestionText {
+    color: #2c3e50;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Similar Entries Button */
+.similarBtn {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #95E1D3 0%, #A8D8EA 100%);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.similarBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(149, 225, 211, 0.3);
+}
+
+.similarBtn:active {
+    transform: translateY(0);
+}
+
+/* Actions */
+.actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.newEntryBtn {
+    padding: 0.75rem 1.5rem;
+    background: #ecf0f1;
+    border: 1px solid #bdc3c7;
+    border-radius: 6px;
+    color: #2c3e50;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.newEntryBtn:hover {
+    background: #d5dbdb;
+    border-color: #95a5a6;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .responseContainer {
+        padding: 1.5rem;
+    }
+
+    .header h2 {
+        font-size: 1.5rem;
+    }
+
+    .moodEmoji {
+        font-size: 2rem;
+    }
+
+    .emotion {
+        font-size: 1.1rem;
+    }
+}
