@@ -1,5 +1,5 @@
 import styles from './MoodCheckIn.module.css';
-import { userState, useState } from 'react';
+import { useState } from 'react';
 
 const MOODS = [
     { emoji: '😌', label: 'Calm' },

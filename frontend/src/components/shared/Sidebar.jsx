@@ -17,7 +17,7 @@ const JOURNALS = [
 ];
 
 const Sidebar = () => {
-    const active = '/';
+    // const active = '/';
 
     return (
         <aside className={styles.sidebar}>

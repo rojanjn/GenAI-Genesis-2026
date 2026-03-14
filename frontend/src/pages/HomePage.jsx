@@ -4,6 +4,9 @@ import MoodCheckIn from '../features/home/components/MoodCheckIn.jsx';
 import JournalPrompt from '../features/home/components/JournalPrompt.jsx';
 import ExerciseList from '../features/home/components/ExerciseList.jsx';
 import ProgressTracker from '../features/home/components/ProgressTracker.jsx';
+import { useNavigate } from 'react-router-dom';
+
+const navigate = useNavigate();
 
 const STATS = [
   { label: 'Check-in streak', value: '2', sub: '↑ days in a row', positive: true },
@@ -27,7 +30,9 @@ const HomePage = () => {
 
         <div className={styles.topbarRight}>
           <span className={styles.dateBadge}>Saturday, March 14</span>
-          <button className={styles.btnPrimary}>+ New Entry</button>
+          <button className={styles.btnPrimary} onClick={() => navigate('/journal')}>
+            + New entry
+          </button>
         </div>
       </div>
 

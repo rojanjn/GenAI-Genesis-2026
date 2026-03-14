@@ -1,5 +1,5 @@
-import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import { useEditor, EditorContent } from '@tiptap/react';
 import { useState } from 'react';
 import styles from './JournalEditor.module.css';
 
@@ -74,11 +74,15 @@ const Toolbar = ({ editor }) => {
 const JournalEditor = () => {
     const [promptIndex, setPromptIndex] = useState(0);
     const [saved, setSaved] = useState(false);
+    const [content, setContent] = useState('');
 
     const editor = useEditor({
         extensions: [StarterKit],
         content: '',
-        onUpdate: () => setSaved(false),
+        onUpdate: ({ editor }) => {
+            setSaved(false);
+            setContent(editor.getText().trim());
+        },
         editorProps: {
             attributes: {
                 class: styles.editorArea,
@@ -86,7 +90,7 @@ const JournalEditor = () => {
         },
     });
 
-    const isEmpty = !editor || editor.isEmpty;
+    const isEmpty = content.length === 0;
 
     const handleNewPrompt = () => {
         setPromptIndex((prev) => (prev + 1) % PROMPTS.length);
