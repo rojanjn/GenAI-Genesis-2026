@@ -8,24 +8,45 @@
 ### Core Components
 1. **Database Layer** (`backend/db/`)
    - `firebase_client.py`: Singleton Firestore client initialization
-   - `queries.py`: Database operations (CRUD for entries, moods, notifications)
+   - `queries.py`: Database operations (CRUD for entries, moods, profiles, analytics)
 
 2. **Embeddings Layer** (`backend/embeddings/`)
    - `embedding_service.py`: OpenAI text-embedding-3-small integration
    - `similarity_search.py`: Cosine similarity calculations and retrieval
 
+3. **AI Agent Layer** (`backend/ai/`)
+   - `agent.py`: Main agent loop orchestrating mood analysis → profile updates
+   - `mood_analysis.py`: OpenAI-based mood/emotion classification
+   - `response_generator.py`: MI-style reflective response generation
+   - `profile_updater.py`: Long-term user profile memory summarization
+   - `memory.py`: Backboard API integration for persistent user memory
+
+4. **API Layer** (`backend/api/`)
+   - `diary.py`: `/journal-entry` endpoint (main entry point)
+   - `insights.py`: `/progress/{user_id}` endpoint for dashboard stats
+
 ### Data Flow
 ```
-User Entry → generate_embedding() → save_entry() → Firestore
-             ↓
-        get_all_entries() → find_similar_entries() → Top 3 similar entries
+POST /journal-entry
+    ↓
+1. Generate embedding
+2. Find similar past entries (semantic search)
+3. Run agent loop:
+   - Analyze mood
+   - Load user profile (long-term memory)
+   - Generate reflective response
+   - Update profile with new patterns
+   - Store updated profile
+4. Persist entry + mood to Firestore
+5. Return comprehensive response
 ```
 
 ### Firestore Collections
-- **diary_entries**: `{user_id, text, embedding, timestamp, mood_label?, intensity?}` (mood fields optional, populated by AI analysis)
-- **mood_history**: `{user_id, mood, intensity, date}`
-- **notifications**: `{user_id, type, message, scheduled_time, sent}`
-- **users**: User profiles and preferences
+- **diary_entries**: `{user_id, text, embedding, timestamp}`
+- **mood_history**: `{user_id, mood, intensity, date, timestamp}`
+- **user_profiles**: `{user_id, common_stressors, recurring_emotions, helpful_strategies, support_preferences, recent_patterns, summary, updated_at}`
+- **notifications**: `{user_id, type, message, scheduled_time, sent, created_at}`
+- **users**: User metadata (created for auth in future)
 
 ## Key Patterns & Conventions
 
@@ -52,35 +73,56 @@ User Entry → generate_embedding() → save_entry() → Firestore
 
 ## Common Workflows
 
-### Adding an Entry
+### Complete Journal Entry Processing (What Actually Happens)
 ```python
-from backend.db.queries import save_entry, get_all_entries
-from backend.embeddings.embedding_service import generate_embedding
-from backend.embeddings.similarity_search import find_similar_entries
-
-# 1. Generate embedding
-embedding = generate_embedding(entry_text)
-
-# 2. Save to database
-entry_id = save_entry(user_id, entry_text, embedding)
-
-# 3. Find similar past entries
-all_entries = get_all_entries(user_id)
-similar = find_similar_entries(embedding, all_entries, top_k=3)
+# User submits entry via POST /api/journal-entry
+async def save_journal_entry(data: JournalEntryRequest):
+    # 1. Embeddings
+    embedding = generate_embedding(data.entry)
+    
+    # 2. Semantic search for context
+    all_entries = get_all_entries(data.user_id)
+    similar = find_similar_entries(embedding, all_entries, top_k=3)
+    
+    # 3. Full agent loop (orchestrates all AI steps)
+    agent_result = await run_agent_loop(
+        diary_entry=data.entry,
+        assistant_id=f"assistant_{data.user_id}",
+        recent_entries=similar,
+    )
+    # Returns: mood, response, updated_profile, safety_flag
+    
+    # 4. Persist to database
+    entry_id = save_entry(data.user_id, data.entry, embedding)
+    mood_id = save_mood(data.user_id, agent_result.mood.emotion, intensity)
+    store_user_long_term_memory(data.user_id, agent_result.updated_profile)
+    
+    return {...}
 ```
 
-### Retrieving Recent Entries
+### Querying User Analytics (Insights Dashboard)
 ```python
-from backend.db.queries import get_recent_entries
+from backend.db.queries import (
+    get_user_mood_average,
+    get_entry_count,
+    get_check_in_streak,
+    get_user_mood_history,
+)
 
-entries = get_recent_entries(user_id, limit=3)  # Returns last 3 entries
+# Dashboard endpoint uses these for stats
+mood_avg = get_user_mood_average(user_id, days=30)
+streak = get_check_in_streak(user_id)
+total_entries = get_entry_count(user_id)
+history = get_user_mood_history(user_id, days=30)
 ```
 
-### Recording Mood
+### Retrieving User Profile Memory
 ```python
-from backend.db.queries import save_mood
+from backend.db.queries import get_user_long_term_memory
 
-mood_id = save_mood(user_id, mood="happy", intensity=8)
+# Used by agent loop to contextualize response
+profile = get_user_long_term_memory(user_id)
+# Returns: common_stressors, recurring_emotions, strategies, preferences, patterns, summary
 ```
 
 ## Implementation Notes
@@ -91,35 +133,60 @@ mood_id = save_mood(user_id, mood="happy", intensity=8)
 - Check `firebase_admin._apps` to avoid re-initialization
 
 ### Queries Module
-- All entry lookups filtered by `user_id` for multi-user isolation
+All database operations:
+- Filtered by `user_id` for multi-user isolation
+- Return Python dictionaries (not Firestore objects)
 - Timestamps stored as UTC via `datetime.utcnow()`
-- Returns entries as dicts with `entry_id` populated from `doc.id`
+- Support CRUD operations and analytics queries
+
+**New analytics functions**:
+- `get_user_mood_history(user_id, days=30)` - Mood records over N days
+- `get_user_mood_average(user_id, days=30)` - Average intensity
+- `get_entry_count(user_id)` - Total entries
+- `get_check_in_streak(user_id)` - Consecutive days with entries
+- `store_user_long_term_memory(user_id, memory)` - Save profile
+- `get_user_long_term_memory(user_id)` - Load profile
+
+### Agent Loop Integration
+- `run_agent_loop()` orchestrates full pipeline (5 steps)
+- Takes `diary_entry`, `assistant_id`, `recent_entries`
+- Returns `AgentResult` with mood, response, updated_profile, safety_flag
+- Must be awaited (async function)
+- Requires Backboard API key for persistent memory (optional)
 
 ### Embedding Service
-- Wraps OpenAI client—no batching for MVP (keep simple)
-- Returns raw embedding vector; dimension checking done in similarity search
-- API key validation happens at runtime, not import time
+- Wraps OpenAI client—no batching for MVP
+- Returns raw embedding vector; dimension checking in similarity search
+- API key validation at runtime
 
 ### Similarity Search
-- `cosine_similarity()` handles dimension mismatch validation
-- `find_similar_entries()` automatically skips entries without embeddings
-- Results returned as `(similarity_score, entry)` tuples sorted descending
+- `cosine_similarity()` handles dimension validation
+- `find_similar_entries()` skips entries without embeddings
+- Results: `(similarity_score, entry)` tuples sorted descending
+
+## Files Implemented
+- ✅ **Database layer**: Complete CRUD + analytics
+- ✅ **Embeddings layer**: Generation + similarity search
+- ✅ **AI agent loop**: Full orchestration pipeline
+- ✅ **API endpoints**: `/journal-entry`, `/progress/{user_id}`
+- ✅ **FastAPI setup**: CORS, logging, Firebase init
 
 ## Files Not Yet Implemented
-- **FastAPI routes**: Handled by another developer; use `/` prefix in imports
-- **Frontend code**: Separate JS module; backend exports JSON responses
-- **AI prompt logic**: Separate orchestration layer (not in this codebase yet)
-- **Agent coordination**: Multi-step workflows handled at API level
+- **Frontend code**: Separate JS module; backend exports JSON
+- **User authentication**: Firebase Auth integration pending
+- **Backboard API setup**: Optional for memory persistence
 
 ## Testing
-Each module includes `if __name__ == "__main__":` test blocks for manual validation:
-- Run `python backend/embeddings/similarity_search.py` to test vector math
-- Run `python backend/embeddings/embedding_service.py` to test OpenAI connection
-- Database tests require Firebase credentials configured
+Each module includes `if __name__ == "__main__":` test blocks:
+- Run `python -m backend.embeddings.similarity_search` to test vector math
+- Run `python -m backend.embeddings.embedding_service` to test OpenAI
+- Run `python -m backend.db.queries` to list database functions
+- Run `uvicorn backend.api.main:app --reload` to start API server
 
 ## Dependencies
 - `firebase-admin`: Firestore client
-- `openai`: Embedding generation
-- `math`: Built-in for cosine similarity (no additional dependency)
+- `openai`: Embedding + chat generation
+- `python-dotenv`: Environment variable management
+- `numpy`: (optional, for advanced vector operations)
 
 **Last Updated**: March 14, 2026
