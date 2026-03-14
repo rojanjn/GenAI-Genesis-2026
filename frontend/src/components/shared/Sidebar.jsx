@@ -1,4 +1,4 @@
-import styles from './Sidebar.module.jsx'
+import styles from './Sidebar.module.css'
 
 const NAV_ITEMS = [
     { icon: '⌂', label: 'Home', path: '/' },
@@ -19,7 +19,7 @@ const Sidebar = () => {
     const active = '/';
 
     return (
-        <aside className={styles.Sidebar}>
+        <aside className={styles.sidebar}>
             <div className={styles.logo}>
                 {/* TODO: LOGO */}
                 LOGO<span className={styles.logoAccent}>.</span>
@@ -27,14 +27,14 @@ const Sidebar = () => {
 
             <nav className={styles.nav}>
                 {NAV_ITEMS.map((item) => (
-                    key={item.path},
-                    href={item.path},
-                    className={`${styles.navItem} ${active === item.path ? styles.active : ''}`}
-                
-                <a>
-                    <span className={styles.navIcon}>{itemIcon}</span>
-                    {item.label}
-                </a>
+                    <a
+                        key={item.path}
+                        href = { item.path }
+                        className = {`${styles.navItem} ${active === item.path ? styles.active : ''}`}
+                    >
+                        <span className={styles.navIcon}>{item.icon}</span>
+                        {item.label}
+                    </a>
                 ))}
             </nav>
 
@@ -44,10 +44,10 @@ const Sidebar = () => {
                     <div key={j.label} className={styles.journalItem}>
                         <span
                             className={styles.journalDot}
-                            style={{ background = j.color }}
+                            style={{ background: j.color }}
                         />
-                        <span className={styles.journalLabel}>j.label</span>
-                        <span className={styles.journalCount}>j.count</span>
+                        <span className={styles.journalLabel}>{j.label}</span>
+                        <span className={styles.journalCount}>{j.count}</span>
                     </div>
                 ))}
             </div>
