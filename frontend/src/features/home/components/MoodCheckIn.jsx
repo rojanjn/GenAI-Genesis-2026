@@ -1,5 +1,6 @@
 import styles from './MoodCheckIn.module.css';
 import { useState } from 'react';
+import { saveMoodEntry, getProgress, updateProgress } from '../../../utils/storage';
 
 const MOODS = [
     { emoji: '😌', label: 'Calm' },
@@ -15,7 +16,19 @@ const MoodCheckIn = () => {
 
     const handleSave = () => {
         if (!selected) return;
-        console.log({ mood: selected, note });
+        saveMoodEntry(selected, note);
+
+        // update progress
+        const progress = getProgress();
+        const today = new Date().toDateString();
+        const alreadyCheckedIn = progress.checkedInDays.includes(today);
+
+        updateProgress({
+            weeklyCheckIns: alreadyCheckedIn ? progress.weeklyCheckIns : progress.weeklyCheckIns + 1,
+            checkInStreak: alreadyCheckedIn ? progress.checkInStreak : progress.checkInStreak + 1,
+            checkedInDays: alreadyCheckedIn ? progress.checkedInDays : [...progress.checkedInDays, today],
+        });
+
         setNote('');
         setSelected(null);
     };

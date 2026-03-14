@@ -1,10 +1,5 @@
 import styles from './ProgressPage.module.css';
-
-const GOALS = [
-    { label: 'Weekly check-ins', current: 3, total: 5 },
-    { label: 'Journal entries', current: 5, total: 7 },
-    { label: 'Exercises done', current: 2, total: 4 },
-];
+import { getProgress, getMoodEntries } from '../utils/storage.js';
 
 const MOOD_HISTORY = [
     { day: 'Mon', value: 6 },
@@ -16,16 +11,24 @@ const MOOD_HISTORY = [
     { day: 'Sun', value: 7 },
 ];
 
-const STATS = [
-    { label: 'Check-in streak', value: '12', sub: 'days in a row' },
-    { label: 'Total sessions', value: '8', sub: 'this month' },
-    { label: 'Journal entries', value: '24', sub: 'all time' },
-    { label: 'Avg mood score', value: '7.2', sub: 'this week' },
-];
-
 const MAX_MOOD = 10;
 
 const ProgressPage = () => {
+    const progress = getProgress();
+
+    const STATS = [
+        { label: 'Check-in streak', value: String(progress.checkInStreak), sub: 'days in a row' },
+        { label: 'Total sessions', value: String(progress.sessionsDone), sub: 'this month' },
+        { label: 'Journal entries', value: String(progress.journalCount), sub: 'all time' },
+        { label: 'Avg mood score', value: '7.2', sub: 'this week' },
+    ];
+
+    const GOALS = [
+        { label: 'Weekly check-ins', current: progress.weeklyCheckIns, total: 5 },
+        { label: 'Journal entries', current: progress.weeklyJournals, total: 7 },
+        { label: 'Exercises done', current: progress.weeklyExercises, total: 4 },
+    ];
+
     return (
         <div className={styles.page}>
             <div className={styles.topbar}>
@@ -105,8 +108,10 @@ const ProgressPage = () => {
                     <div className={styles.calendar}>
                         {Array.from({ length: 31 }, (_, i) => {
                             const day = i + 1;
-                            const done = [1, 2, 3, 5, 6, 7, 8, 10, 11, 12, 13, 14].includes(day);
-                            const today = day === 14;
+                            const done = progress.checkedInDays.includes(
+                                new Date(2026, 2, day).toDateString()
+                            );
+                            const today = day === new Date().getDate();
                             return (
                                 <div
                                     key={day}
