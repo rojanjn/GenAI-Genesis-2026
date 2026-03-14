@@ -1,53 +1,50 @@
 import json
-from typing import List, Optional, Dict, Any
+from typing import List, Dict, Optional
 
-from .openai_client import chat_completion_json
+from .openai_client import chat_completion
 from .prompts import PROFILE_UPDATE_SYSTEM_PROMPT
 from .schemas import UserProfileMemory
 
 
-def _format_entries(entries: List[Dict[str, Any]]) -> str:
-    if not entries:
-        return "No recent entries."
-
-    lines = []
-    for entry in entries:
-        timestamp = entry.get("timestamp", "unknown time")
-        text = entry.get("text", "")
-        mood_label = entry.get("mood_label", "unknown")
-        intensity = entry.get("intensity", "unknown")
-        lines.append(
-            f"- {timestamp} | mood={mood_label} | intensity={intensity}\n  {text}"
-        )
-
-    return "\n".join(lines)
-
-
 def update_user_profile_memory(
-    recent_entries: List[Dict[str, Any]],
+    recent_entries: List[Dict],
     current_memory: Optional[str] = None,
 ) -> UserProfileMemory:
-    """
-    Summarise recent user patterns into long-term profile memory.
-    """
+    entries_text = "\n".join(
+        (
+            f"- {entry.get('timestamp', 'unknown time')} | "
+            f"mood={entry.get('mood_label', 'unknown')} | "
+            f"intensity={entry.get('intensity', 'unknown')}\n"
+            f"{entry.get('text', '')}"
+        )
+        for entry in recent_entries
+    ) if recent_entries else "No recent entries."
 
-    entries_text = _format_entries(recent_entries)
     memory_text = current_memory or "No existing memory."
 
     user_prompt = f"""
 CURRENT MEMORY:
 {memory_text}
 
-RECENT JOURNAL ENTRIES:
+RECENT ENTRIES:
 {entries_text}
 
-Return JSON with:
-- common_stressors
-- recurring_emotions
-- helpful_strategies
-- support_preferences
-- recent_patterns
-- summary
+Return only valid JSON.
+Do not include markdown.
+Do not include backticks.
+Do not include reasoning.
+Keep every list short.
+Keep the summary to one sentence under 30 words.
+
+Use exactly this structure:
+{{
+  "common_stressors": [],
+  "recurring_emotions": [],
+  "helpful_strategies": [],
+  "support_preferences": [],
+  "recent_patterns": [],
+  "summary": ""
+}}
 """
 
     messages = [
@@ -55,7 +52,16 @@ Return JSON with:
         {"role": "user", "content": user_prompt},
     ]
 
-    raw_response = chat_completion_json(messages, max_tokens=400)
-    parsed = json.loads(raw_response)
+    for _ in range(2):
+        raw_response = chat_completion(messages, max_tokens=1200, temperature=0.2)
 
-    return UserProfileMemory(**parsed)
+        print("Raw profile update response:")
+        print(raw_response)
+
+        try:
+            parsed = json.loads(raw_response)
+            return UserProfileMemory(**parsed)
+        except json.JSONDecodeError:
+            print("Retrying profile update due to JSON error...")
+
+    raise ValueError("Model repeatedly returned invalid JSON for profile update.")

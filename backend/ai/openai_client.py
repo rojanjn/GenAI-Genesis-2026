@@ -1,47 +1,35 @@
 import os
 from openai import OpenAI
+
 MODEL_NAME = "openai/gpt-oss-120b"
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "test")
-
-if not OPENAI_API_KEY:
-    raise RuntimeError(
-        "OPENAI_API_KEY not found. Make sure the .env is set up correctly"
-    )
-
+DEFAULT_MAX_TOKENS = 1000
 
 client = OpenAI(
-    api_key=OPENAI_API_KEY,
-    base_url="https://handles-virtual-creating-introduced.trycloudflare.com/v1",
+    api_key=os.getenv("OPENAI_API_KEY", "test"),
+    base_url="https://vjioo4r1vyvcozuj.us-east-2.aws.endpoints.huggingface.cloud/v1",
+    timeout=60.0,
 )
 
 
-def chat_completion(messages, max_tokens=400, temperature=0.3):
-    """
-    Basic chat completion helper.
-    """
-
-    response = client.chat.completions.create(
+def chat_completion(messages, max_tokens=DEFAULT_MAX_TOKENS, temperature=0.3):
+    resp = client.chat.completions.create(
         model=MODEL_NAME,
         messages=messages,
         max_tokens=max_tokens,
         temperature=temperature,
     )
 
-    return response.choices[0].message.content
+    choice = resp.choices[0]
+    message = choice.message
 
+    if message.content is None:
+        print("Model returned no message content.")
+        print("Finish reason:", choice.finish_reason)
+        print("Reasoning:", getattr(message, "reasoning", None))
+        print("Full response:")
+        print(resp)
+        raise ValueError(
+            "Model response content was None. Increase max_tokens or simplify the prompt."
+        )
 
-def chat_completion_json(messages, max_tokens=400):
-    """
-    Forces JSON output for structured tasks like mood classification.
-    """
-
-    response = client.chat.completions.create(
-        model=MODEL_NAME,
-        messages=messages,
-        max_tokens=max_tokens,
-        temperature=0.2,
-        response_format={"type": "json_object"},
-    )
-
-    return response.choices[0].message.content
+    return message.content

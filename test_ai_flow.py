@@ -48,36 +48,43 @@ Support preferences:
 - reflective
 """
 
-    print("Starting mood analysis...")
-    mood = analyse_mood(today_entry)
-    print("Mood analysis done.")
-    print(mood.model_dump())
-    print()
+    try:
+        print("Starting mood analysis...")
+        mood = analyse_mood(today_entry)
+        print("Mood analysis done.")
+        print(mood.model_dump())
+        print()
 
-    print("Starting response generation...")
-    response = generate_reflective_response(
-        today_entry=today_entry,
-        recent_entries=recent_entries,
-        user_profile_memory=user_profile_memory,
-    )
-    print("Response generation done.")
-    print(response.model_dump())
-    print()
+        print("Starting response generation...")
+        response = generate_reflective_response(
+            today_entry=today_entry,
+            recent_entries=recent_entries,
+            user_profile_memory=user_profile_memory,
+        )
+        print("Response generation done.")
+        print(response.model_dump())
+        print()
 
-    print("Starting profile update...")
-    updated_memory = update_user_profile_memory(
-        recent_entries=recent_entries + [
-            {
-                "timestamp": "2026-03-14",
-                "text": today_entry,
-                "mood_label": mood.emotion,
-                "intensity": mood.intensity,
-            }
-        ],
-        current_memory=user_profile_memory,
-    )
-    print("Profile update done.")
-    print(updated_memory.model_dump())
+        print("Starting profile update...")
+        updated_memory = update_user_profile_memory(
+            recent_entries=recent_entries + [
+                {
+                    "timestamp": "2026-03-14",
+                    "text": today_entry,
+                    "mood_label": mood.emotion,
+                    "intensity": mood.intensity,
+                }
+            ],
+            current_memory=user_profile_memory,
+        )
+        print("Profile update done.")
+        print(updated_memory.model_dump())
+        print()
+
+    except Exception as e:
+        print("Test flow failed:")
+        print(type(e).__name__)
+        print(e)
 
 
 if __name__ == "__main__":

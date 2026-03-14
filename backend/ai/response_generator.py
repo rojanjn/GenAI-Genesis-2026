@@ -1,50 +1,47 @@
 import json
-from typing import List, Optional, Dict, Any
+from typing import List, Dict, Optional
 
-from .openai_client import chat_completion_json
+
+from .openai_client import chat_completion
 from .prompts import RESPONSE_GENERATION_SYSTEM_PROMPT
 from .schemas import GeneratedResponse
 
 
-def _format_recent_entries(recent_entries: List[Dict[str, Any]]) -> str:
-    if not recent_entries:
-        return "No recent entries."
-
-    lines = []
-    for entry in recent_entries:
-        timestamp = entry.get("timestamp", "unknown time")
-        text = entry.get("text", "")
-        lines.append(f"- {timestamp}: {text}")
-
-    return "\n".join(lines)
-
-
 def generate_reflective_response(
     today_entry: str,
-    recent_entries: List[Dict[str, Any]],
+    recent_entries: List[Dict],
     user_profile_memory: Optional[str] = None,
 ) -> GeneratedResponse:
-    """
-    Generate a supportive motivational interviewing style response.
-    """
+    recent_text = "\n".join(
+        f"- {entry.get('timestamp', 'unknown time')}: {entry.get('text', '')}"
+        for entry in recent_entries
+    ) if recent_entries else "No recent entries."
 
-    recent_entries_text = _format_recent_entries(recent_entries)
-    memory_text = user_profile_memory or "No saved user profile memory yet."
+    memory_text = user_profile_memory or "No memory yet."
 
     user_prompt = f"""
-USER PROFILE MEMORY:
+USER MEMORY:
 {memory_text}
 
 RECENT ENTRIES:
-{recent_entries_text}
+{recent_text}
 
-TODAY'S ENTRY:
+TODAY ENTRY:
 {today_entry}
 
-Return JSON with:
-- reflection
-- open_question
-- coping_suggestion
+Return only valid JSON.
+Do not include markdown.
+Do not include backticks.
+Do not include reasoning.
+Keep the reflection brief.
+Keep the coping suggestion to one small action.
+
+Use exactly this structure:
+{{
+  "reflection": "It sounds like ...",
+  "open_question": "What feels ...?",
+  "coping_suggestion": "Try ..."
+}}
 """
 
     messages = [
@@ -52,7 +49,16 @@ Return JSON with:
         {"role": "user", "content": user_prompt},
     ]
 
-    raw_response = chat_completion_json(messages, max_tokens=350)
-    parsed = json.loads(raw_response)
+    for _ in range(2):
+        raw_response = chat_completion(messages, max_tokens=800, temperature=0.3)
 
-    return GeneratedResponse(**parsed)
+        print("Raw response generation output:")
+        print(raw_response)
+
+        try:
+            parsed = json.loads(raw_response)
+            return GeneratedResponse(**parsed)
+        except json.JSONDecodeError:
+            print("Retrying response generation due to JSON error...")
+
+    raise ValueError("Model repeatedly returned invalid JSON for response generation.")

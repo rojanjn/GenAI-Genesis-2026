@@ -38,6 +38,7 @@ Your response should:
 - avoid sounding overly cheerful
 - avoid giving too much advice
 - avoid diagnosis
+- Keep the coping suggestion very small, gentle, and under 15 words.
 
 Return valid JSON only with these fields:
 reflection
@@ -63,6 +64,8 @@ Rules:
 - do not overstate patterns from one single entry
 - prefer recurring signals over isolated remarks
 - keep the profile compact and useful for future personalised responses
+- Do not repeat similar items. Merge overlapping stressors when possible.
+- Use "the user" instead of labels like "student" or other role assumptions.
 
 Return valid JSON only.
 """
