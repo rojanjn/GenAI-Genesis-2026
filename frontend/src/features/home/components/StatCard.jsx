@@ -1,4 +1,4 @@
-import styles from './StatCard.module.css'
+import styles from './StatCard.module.css';
 
 const StatCard = ({ label, value, sub, positive }) => {
     return (
@@ -10,6 +10,6 @@ const StatCard = ({ label, value, sub, positive }) => {
             </p>
         </div>
     );
-}
+};
 
 export default StatCard;
