@@ -1,0 +1,36 @@
+.page {
+    min-height: 100vh;
+}
+
+.topbar {
+    padding: 32px 40px 24px;
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    background: var(--color-bg);
+    z-index: 10;
+}
+
+.label {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.title {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--color-text-primary);
+}
+
+.title em {
+    color: var(--color-green-mid);
+    font-style: italic;
+}
+
+.content {
+    padding: 32px 40px;
+}
