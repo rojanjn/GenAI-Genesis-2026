@@ -108,30 +108,23 @@ def get_all_entries(user_id: str) -> List[Dict[str, Any]]:
 def save_mood(user_id: str, mood: str, intensity: int) -> str:
     """
     Save a mood record for a user.
-    
-    Args:
-        user_id: Unique user identifier
-        mood: Mood label (e.g., "happy", "sad", "anxious")
-        intensity: Mood intensity on scale 1-10
-        
-    Returns:
-        mood_record_id: Auto-generated document ID
     """
     db = get_db()
-    
+
+    now = datetime.utcnow()
+
     mood_data = {
         "user_id": user_id,
         "mood": mood,
         "intensity": intensity,
-        "date": datetime.utcnow().date(),
-        "timestamp": datetime.utcnow(),
+        "date": now.strftime("%Y-%m-%d"),
+        "timestamp": now,
     }
-    
+
     doc_ref = db.collection("mood_history").add(mood_data)
     mood_id = doc_ref[1].id
-    
-    return mood_id
 
+    return mood_id
 
 def save_notification(
     user_id: str, notification_type: str, message: str, scheduled_time: datetime
