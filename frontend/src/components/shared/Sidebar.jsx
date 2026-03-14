@@ -29,8 +29,8 @@ const Sidebar = () => {
                 {NAV_ITEMS.map((item) => (
                     <a
                         key={item.path}
-                        href = { item.path }
-                        className = {`${styles.navItem} ${active === item.path ? styles.active : ''}`}
+                        href={item.path}
+                        className={`${styles.navItem} ${active === item.path ? styles.active : ''}`}
                     >
                         <span className={styles.navIcon}>{item.icon}</span>
                         {item.label}
@@ -40,7 +40,7 @@ const Sidebar = () => {
 
             <div className={styles.section}>
                 <div className={styles.sectionLabel}>Journal</div>
-                {JOURNALS.map((item) => (
+                {JOURNALS.map((j) => (
                     <div key={j.label} className={styles.journalItem}>
                         <span
                             className={styles.journalDot}
