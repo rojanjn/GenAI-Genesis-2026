@@ -1,5 +1,5 @@
 import styles from './HomePage.module.css'
-import StatCard from '../features/home/components/StatCard'
+import StatCard from '../features/home/components/StatCard.jsx'
 
 const STATS = [
   { label: 'Check-in streak', value: '2', sub: '↑ days in a row', positive: true },
@@ -39,7 +39,7 @@ const HomePage = () => {
           />
         ))}
       </div>
-      
+
     </div>
   );
 };
