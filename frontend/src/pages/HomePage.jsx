@@ -1,5 +1,6 @@
-import styles from './HomePage.module.css'
-import StatCard from '../features/home/components/StatCard.jsx'
+import styles from './HomePage.module.css';
+import StatCard from '../features/home/components/StatCard.jsx';
+import MoodCheckIn from '../features/home/components/MoodCheckIn';
 
 const STATS = [
   { label: 'Check-in streak', value: '2', sub: '↑ days in a row', positive: true },
@@ -38,6 +39,11 @@ const HomePage = () => {
             positive={s.positive}
           />
         ))}
+      </div>
+
+      {/* Content grid */}
+      <div className={styles.contentGrid}>
+        <MoodCheckIn />
       </div>
 
     </div>
