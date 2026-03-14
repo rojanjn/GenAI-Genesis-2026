@@ -13,6 +13,8 @@ Role in system:
 import os
 from typing import List
 import openai
+from dotenv import load_dotenv
+load_dotenv()
 
 
 def generate_embedding(text: str) -> List[float]:
