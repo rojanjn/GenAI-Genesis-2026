@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 # environment variables
+keys/
 .env
 .env.*
 *.env
@@ -420,5 +421,8 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
+# macOS
+.DS_Store
 
-.env
+# IDE
+.idea/

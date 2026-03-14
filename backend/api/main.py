@@ -5,6 +5,7 @@ import logging
 from .diary import router as diary_router
 from .chat import router as chat_router
 from .insights import router as insights_router
+from backend.db.firebase_client import init_firebase
 
 # Logging setup
 logging.basicConfig(level=logging.INFO)
@@ -30,6 +31,11 @@ app.add_middleware(
 app.include_router(diary_router, prefix="/api", tags=["Diary"])
 app.include_router(chat_router, prefix="/api", tags=["Chat"])
 app.include_router(insights_router, prefix="/api", tags=["Insights"])
+
+@app.on_event("startup")
+def startup_event():
+    init_firebase()
+    logger.info("Firebase initialised")
 
 # Root endpoint
 @app.get("/")
