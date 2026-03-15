@@ -2,6 +2,7 @@ import styles from './Sidebar.module.css';
 import { NavLink } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getUserProfile } from '../../utils/storage';
+import { useNavigate } from 'react-router-dom';
 
 const NAV_ITEMS = [
     { icon: '🏠', label: 'Home', path: '/' },
@@ -19,7 +20,6 @@ const JOURNALS = [
 ];
 
 const Sidebar = () => {
-    // const active = '/';
     const [profile, setProfile] = useState(getUserProfile());
 
     useEffect(() => {
@@ -27,6 +27,25 @@ const Sidebar = () => {
         window.addEventListener('storage', onStorage);
         return () => window.removeEventListener('storage', onStorage);
     }, []);
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        // Clear auth token from localStorage
+        localStorage.removeItem('authToken');
+
+        // Clear user data
+        localStorage.removeItem('userData');
+
+        // Clear app data (optional - if you want to clear all user data on logout)
+        // localStorage.clear();
+
+        // Redirect to login/home page
+        navigate('/');
+
+        // Optional: Show logout message
+        console.log('User logged out successfully');
+    };
 
     return (
         <aside className={styles.sidebar}>
