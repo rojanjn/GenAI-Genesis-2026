@@ -7,7 +7,6 @@ import MoodCheckIn from '../features/home/components/MoodCheckIn.jsx';
 import JournalPrompt from '../features/home/components/JournalPrompt.jsx';
 import ExerciseList from '../features/home/components/ExerciseList.jsx';
 import ProgressTracker from '../features/home/components/ProgressTracker.jsx';
-import { useNavigate } from 'react-router-dom';
 import { getUserProfile } from '../utils/storage';
 
 
@@ -26,7 +25,7 @@ const HomePage = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
   // Default stats
@@ -57,35 +56,35 @@ const HomePage = () => {
         }
 
         const data = await response.json();
-        
+
         // Transform backend response to stats format
         const transformedStats = [
-          { 
-            label: 'Check-in streak', 
-            value: data.streak?.toString() || '0', 
-            sub: 'days in a row', 
-            positive: (data.streak || 0) > 0 
+          {
+            label: 'Check-in streak',
+            value: data.streak?.toString() || '0',
+            sub: 'days in a row',
+            positive: (data.streak || 0) > 0
           },
-          { 
-            label: 'Journal entries', 
-            value: data.total_entries?.toString() || '0', 
-            sub: 'total entries', 
-            positive: false 
+          {
+            label: 'Journal entries',
+            value: data.total_entries?.toString() || '0',
+            sub: 'total entries',
+            positive: false
           },
-          { 
-            label: 'Mood check-ins', 
-            value: data.total_moods?.toString() || '0', 
-            sub: 'entries', 
-            positive: false 
+          {
+            label: 'Mood check-ins',
+            value: data.total_moods?.toString() || '0',
+            sub: 'entries',
+            positive: false
           },
-          { 
-            label: 'Mood average', 
-            value: (data.mood_average?.toFixed(1) || '0.0').toString(), 
-            sub: 'out of 10', 
-            positive: (data.mood_average || 0) >= 5 
+          {
+            label: 'Mood average',
+            value: (data.mood_average?.toFixed(1) || '0.0').toString(),
+            sub: 'out of 10',
+            positive: (data.mood_average || 0) >= 5
           },
         ];
-        
+
         setStats(transformedStats);
       } catch (err) {
         console.error('Error fetching stats:', err);
