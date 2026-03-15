@@ -228,3 +228,92 @@
     color: var(--color-green-text);
     font-weight: 600;
 }
+.tabGroup {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.tabButton {
+    min-width: 110px;
+    padding: 12px 18px;
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tabButton:hover {
+    border-color: var(--color-green-mid);
+}
+
+.tabButtonActive {
+    background: var(--color-green-dark);
+    border-color: var(--color-green-dark);
+    color: #ffffff;
+}
+
+.entryBlock {
+    margin-top: 8px;
+}
+
+.text {
+    font-size: 18px;
+    line-height: 1.8;
+    color: var(--color-text-primary);
+    white-space: pre-wrap;
+}
+
+.date {
+    font-size: 14px;
+    margin-bottom: 20px;
+    color: var(--color-text-muted);
+}
+
+.position {
+    margin-top: 24px;
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+.navButtons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+}
+
+.navButton {
+    padding: 12px 18px;
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.navButton:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.message {
+    font-size: 16px;
+    color: var(--color-text-muted);
+}
+
+.error {
+    font-size: 16px;
+    color: #b54747;
+}
+
+.moodLine {
+    font-size: 18px;
+    line-height: 1.8;
+    color: var(--color-text-primary);
+}

@@ -8,6 +8,7 @@ from .chat import router as chat_router
 from .insights import router as insights_router
 from .auth import router as auth_router
 from .moods import router as moods_router
+from .history import router as history_router
 from backend.db.firebase_client import init_firebase
 from backend.services.scheduler import start_background_tasks, stop_background_tasks
 
@@ -48,6 +49,7 @@ app.include_router(diary_router, prefix="/api", tags=["Diary"])
 app.include_router(moods_router, prefix="/api", tags=["Moods"])
 app.include_router(chat_router, prefix="/api", tags=["Chat"])
 app.include_router(insights_router, prefix="/api", tags=["Insights"])
+app.include_router(history_router, prefix="/api", tags=["History"])
 
 @app.on_event("startup")
 def startup_event():
