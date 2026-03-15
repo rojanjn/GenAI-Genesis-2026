@@ -3,11 +3,11 @@ import { getUserProfile, saveUserProfile } from '../utils/storage';
 import styles from './SettingsPage.module.css';
 
 // const AVATAR_COLORS = ['#3D5A3E', '#7AAE6A', '#C8955A', '#8A7DAE', '#5A8AAE', '#AE5A7D'];
-const GOAL_OPTIONS = ['Reduce anxiety', 'Improve mood', 'Build resilience', 'Sleep better', 'Manage stress', 'Process emotions'];
-const REMINDER_TIMES = ['Off', '8:00 AM', '9:00 AM', '12:00 PM', '6:00 PM', '9:00 PM'];
+// const GOAL_OPTIONS = ['Reduce anxiety', 'Improve mood', 'Build resilience', 'Sleep better', 'Manage stress', 'Process emotions'];
+const REMINDER_TIMES = ['Off', 'Daily', 'Every 3 Days', 'Weekly', 'Monthly'];
 // const THEMES = ['Soft Naturals', 'Night Mode'];
 
-const SECTIONS = ['Profile', 'Goals', 'Notifications', 'Data'];
+const SECTIONS = ['Profile', 'Notifications', 'Data'];
 
 const SettingsPage = () => {
     const [active, setActive] = useState('Profile');
@@ -15,7 +15,6 @@ const SettingsPage = () => {
         name: '',
         email: '',
         // avatarColor: AVATAR_COLORS[0],
-        goals: [],
         reminderTime: 'Off',
         theme: 'Soft Naturals',
         journalPrompts: true,
@@ -32,14 +31,14 @@ const SettingsPage = () => {
 
     const update = (key, value) => setProfile(prev => ({ ...prev, [key]: value }));
 
-    const toggleGoal = (goal) => {
-        setProfile(prev => ({
-            ...prev,
-            goals: prev.goals.includes(goal)
-                ? prev.goals.filter(g => g !== goal)
-                : [...prev.goals, goal],
-        }));
-    };
+    // const toggleGoal = (goal) => {
+    //     setProfile(prev => ({
+    //         ...prev,
+    //         goals: prev.goals.includes(goal)
+    //             ? prev.goals.filter(g => g !== goal)
+    //             : [...prev.goals, goal],
+    //     }));
+    // };
 
     const handleSave = () => {
         saveUserProfile(profile);
@@ -106,29 +105,6 @@ const SettingsPage = () => {
                     {active === 'Profile' && (
                         <div className={styles.section}>
                             <h2 className={styles.sectionTitle}>Profile</h2>
-
-                            {/* Avatar
-                            <div className={styles.avatarRow}>
-                                <div
-                                    className={styles.avatar}
-                                    style={{ background: profile.avatarColor }}
-                                >
-                                    {initials}
-                                </div>
-                                <div>
-                                    <p className={styles.fieldLabel}>Avatar colour</p>
-                                    <div className={styles.colorSwatches}>
-                                        {AVATAR_COLORS.map(c => (
-                                            <button
-                                                key={c}
-                                                className={`${styles.swatch} ${profile.avatarColor === c ? styles.swatchActive : ''}`}
-                                                style={{ background: c }}
-                                                onClick={() => update('avatarColor', c)}
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            </div> */}
 
                             <div className={styles.field}>
                                 <label className={styles.fieldLabel}>Full name</label>
@@ -218,28 +194,6 @@ const SettingsPage = () => {
                             </div>
                         </div>
                     )}
-
-                    {/* {active === 'Preferences' && (
-                        <div className={styles.section}>
-                            <h2 className={styles.sectionTitle}>Preferences</h2>
-
-                            <div className={styles.field}>
-                                <label className={styles.fieldLabel}>Theme</label>
-                                <div className={styles.themeGrid}>
-                                    {THEMES.map(t => (
-                                        <button
-                                            key={t}
-                                            className={`${styles.themeOption} ${profile.theme === t ? styles.themeActive : ''}`}
-                                            onClick={() => update('theme', t)}
-                                        >
-                                            <div className={`${styles.themePreview} ${t === 'Night Mode' ? styles.themePreviewDark : ''}`} />
-                                            <span>{t}</span>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    )} */}
 
                     {active === 'Data' && (
                         <div className={styles.section}>
