@@ -26,6 +26,8 @@ app = FastAPI(
 cors_origins = [
     "http://localhost:3000",  # React development
     "http://127.0.0.1:3000",
+    "http://localhost:3001",  # React development (alternative port)
+    "http://127.0.0.1:3001",
     "http://localhost:5173",  # Vite development
     "http://127.0.0.1:5173",
 ]
@@ -43,7 +45,7 @@ app.add_middleware(
 )
 
 # Register routers
-app.include_router(auth_router, tags=["Authentication"])
+app.include_router(auth_router, prefix="/api", tags=["Authentication"])
 app.include_router(diary_router, prefix="/api", tags=["Diary"])
 app.include_router(moods_router, prefix="/api", tags=["Moods"])
 app.include_router(chat_router, prefix="/api", tags=["Chat"])
