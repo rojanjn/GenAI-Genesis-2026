@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage.jsx';
 import JournalPage from './pages/JournalPage.jsx';
 import SessionsPage from './pages/SessionsPage.jsx';
 import ExercisesPage from './pages/ExercisesPage.jsx';
+import ChatPage from './pages/ChatPage.jsx';
 import ProgressPage from './pages/ProgressPage.jsx';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
           <Route path="/sessions" element={<SessionsPage />} />
           <Route path="/exercises" element={<ExercisesPage />} />
           <Route path="/progress" element={<ProgressPage />} />
+          <Route path="/chat" element={<ChatPage />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>
