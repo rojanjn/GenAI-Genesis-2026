@@ -212,8 +212,6 @@ class EmailService:
                         </a>
                     </p>
                     
-                    <p>Questions? Reply to this email or visit our help center.</p>
-                    
                     <p>Happy journaling!<br>-Your Personal AI Diary!</p>
                 </div>
             </body>
