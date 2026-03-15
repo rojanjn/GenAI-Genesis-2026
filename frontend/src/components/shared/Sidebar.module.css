@@ -145,3 +145,29 @@
     color: rgba(255, 255, 255, 0.2);
     margin-top: 1px;
 }
+
+.logoutBtnTop {
+    width: 80%;
+    padding: 6px 10px;
+    margin: 0 auto 10px auto;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 11px;
+    color: #ff6b6b;
+    background: rgba(255, 100, 100, 0.1);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+    font-weight: 500;
+    text-align: center;
+    display: block;
+}
+
+.logoutBtnTop:hover {
+    background: rgba(255, 100, 100, 0.2);
+    color: #ff5252;
+}
+
+.logoutBtnTop:active {
+    transform: scale(0.98);
+}

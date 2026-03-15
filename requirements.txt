@@ -9,3 +9,4 @@ pydantic[email]
 PyJWT>=2.8.0
 APScheduler>=3.10.4
 sendgrid>=6.10.0
+email-validator

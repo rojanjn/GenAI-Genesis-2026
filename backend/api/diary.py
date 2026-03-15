@@ -18,6 +18,8 @@ from backend.embeddings.embedding_service import generate_embedding
 from backend.embeddings.similarity_search import find_similar_entries
 from backend.services.notification_scheduler import get_notification_scheduler
 
+from backend.ai.memory import get_or_create_assistant
+
 logger = logging.getLogger(__name__)
 
 router = APIRouter()
@@ -48,13 +50,19 @@ async def save_journal_entry(data: JournalEntryRequest, user_id: str = Depends(g
     all_entries = get_all_entries(user_id)
 
     print("Step 3: finding similar past entries")
-    similar_results = find_similar_entries(new_embedding, all_entries, top_k=3)
-    similar_entries = [entry for _, entry in similar_results]
+
+    similar_results = find_similar_entries(
+        new_embedding=new_embedding,
+        entries=all_entries,
+        top_k=3,
+    )
+
+    similar_entries = [entry for score, entry in similar_results]
 
     print("Step 4: running agent loop")
     # Use assistant_id based on user_id
-    assistant_id = f"assistant_{user_id}"
-    
+    assistant_id = await get_or_create_assistant(user_id)
+
     agent_result = await run_agent_loop(
         diary_entry=data.entry,
         assistant_id=assistant_id,

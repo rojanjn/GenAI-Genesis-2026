@@ -8,7 +8,7 @@ const NAV_ITEMS = [
     { icon: '🏠', label: 'Home', path: '/' },
     { icon: '📝', label: 'Journal', path: '/journal' },
     { icon: '💬', label: 'Chat', path: '/chat' },
-    { icon: '📊', label: 'Progress', path: '/progress' },
+    { icon: '📊', label: 'History', path: '/progress' },
     { icon: '⚙', label: 'Settings', path: '/settings' }
 ];
 
@@ -20,32 +20,31 @@ const JOURNALS = [
 ];
 
 const Sidebar = () => {
+    // const active = '/';
     const [profile, setProfile] = useState(getUserProfile());
+
+    const navigate = useNavigate();
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+    const handleLogout = () => {
+        try {
+            // Clear all localStorage data
+            localStorage.clear();
+
+            // Redirect to login page
+            window.location.href = '/login';
+
+            console.log('User logged out successfully');
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
+    };
 
     useEffect(() => {
         const onStorage = () => setProfile(getUserProfile());
         window.addEventListener('storage', onStorage);
         return () => window.removeEventListener('storage', onStorage);
     }, []);
-
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-        // Clear auth token from localStorage
-        localStorage.removeItem('authToken');
-
-        // Clear user data
-        localStorage.removeItem('userData');
-
-        // Clear app data (optional - if you want to clear all user data on logout)
-        // localStorage.clear();
-
-        // Redirect to login/home page
-        navigate('/');
-
-        // Optional: Show logout message
-        console.log('User logged out successfully');
-    };
 
     return (
         <aside className={styles.sidebar}>
@@ -84,10 +83,21 @@ const Sidebar = () => {
             </div>
 
             <div className={styles.footer}>
-                <div className={styles.avatar}>J</div>
-                <div>
-                    <div className={styles.userName}>{profile.name || 'Your name'}</div>
-                    <div className={styles.userSub}>Member · Feburary 2026</div>
+                {/* Logout Button */}
+                <button
+                    className={styles.logoutBtnTop}
+                    onClick={handleLogout}
+                    disabled={isLoggingOut}
+                >
+                    🚪 Logout
+                </button>
+
+                {/* User Section */}
+                <div className={styles.userSection}>
+                    <div className={styles.avatar}>J</div>
+                    <div>
+                        <div className={styles.userName}>{profile.name}</div>
+                    </div>
                 </div>
             </div>
         </aside>

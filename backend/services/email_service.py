@@ -50,7 +50,7 @@ class SendGridProvider(EmailProvider):
             client = self.SendGridAPIClient(self.api_key)
 
             message = self.Mail(
-                from_email=os.getenv("EMAIL_FROM", "noreply@genai-genesis.com"),
+                from_email=os.getenv("EMAIL_FROM", "noreply.airy@gmail.com"),
                 to_emails=recipient_email,
                 subject=subject,
                 html_content=html_content
@@ -188,7 +188,7 @@ class EmailService:
                     
                     <p>We're excited to have you join our journaling companion community.</p>
                     
-                    <p>Your personal AI-ry helps you:</p>
+                    <p>Dear AI-ry helps you:</p>
                     <ul>
                         <li>💭 Reflect on your thoughts and emotions</li>
                         <li>📊 Track your mood patterns over time</li>
@@ -208,11 +208,11 @@ class EmailService:
                         <a href="https://app.genai-genesis.com" 
                            style="display: inline-block; padding: 10px 20px; background-color: #6366f1; 
                                   color: white; text-decoration: none; border-radius: 4px;">
-                            Open Dear AI-ry
+                            Open GenAI Genesis
                         </a>
                     </p>
                     
-                    <p>Happy journaling!<br>-Your New Personal Diary</p>
+                    <p>Happy journaling!<br>-Your Personal AI Diary!</p>
                 </div>
             </body>
         </html>
