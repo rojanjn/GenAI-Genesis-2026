@@ -97,8 +97,7 @@ const Sidebar = () => {
                 <div className={styles.userSection}>
                     <div className={styles.avatar}>J</div>
                     <div>
-                        <div className={styles.userName}>John Doe</div>
-                        <div className={styles.userSub}>Member · Feburary 2026</div>
+                        <div className={styles.userName}>{profile.name}</div>
                     </div>
                 </div>
             </div>
