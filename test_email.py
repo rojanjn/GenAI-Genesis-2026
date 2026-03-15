@@ -16,9 +16,9 @@ from backend.services.email_service import get_email_service
 from backend.services.notification_scheduler import get_notification_scheduler
 from backend.db.queries import get_db
 
-TEST_EMAIL = "billy.king.iboss3@gmail.com"
+TEST_EMAIL = "mewiga4077@indevgo.com"
 TEST_USER_ID = "YxSCAy7loNVRGkYml2nBXB0duVv2"
-TEST_NAME = "Billy King"
+TEST_NAME = "John Doe"
 
 
 # ============================================================================
