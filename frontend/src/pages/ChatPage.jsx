@@ -1,4 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../contexts/AuthContext";
 import styles from './ChatPage.module.css';
 
 const SUGGESTIONS = [
@@ -16,6 +18,8 @@ const INITIAL_MESSAGE = {
 };
 
 const ChatPage = () => {
+    const { user, token } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [messages, setMessages] = useState([INITIAL_MESSAGE]);
     const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
@@ -38,6 +42,19 @@ const ChatPage = () => {
     const handleSend = async (text) => {
         const content = (text || input).trim();
         if (!content) return;
+
+        // Check authentication
+        if (!user || !token) {
+            const errorMsg = {
+                id: Date.now() + 1,
+                role: 'assistant',
+                text: "Please log in to use chat. Redirecting you to login...",
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            };
+            setMessages((prev) => [...prev, errorMsg]);
+            setTimeout(() => navigate('/login'), 2000);
+            return;
+        }
 
         const userMsg = {
             id: Date.now(),
@@ -65,9 +82,9 @@ const ChatPage = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    user_id: 'test_user', // replace later with real logged-in user id
                     message: content,
                     chat_history: buildChatHistory(messages),
                 }),
@@ -208,7 +225,7 @@ const ChatPage = () => {
                     </button>
                 </div>
                 <p className={styles.disclaimer}>
-                    My AI-ry is an AI support tool and is not a substitute for professional mental health care, diagnosis, or treatment. It is inspired by motivational interviewing principles and research on chatbot-assisted smoking cessation conducted by Professor Jonathan Rose at the University of Toronto.
+                    sōl is not a substitute for professional mental health care.
                 </p>
             </div>
         </div>
