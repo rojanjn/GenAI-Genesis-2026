@@ -27,18 +27,17 @@ const Sidebar = () => {
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     const handleLogout = () => {
-        setIsLoggingOut(true);
+        try {
+            // Clear all localStorage data
+            localStorage.clear();
 
-        // Clear auth token from localStorage
-        localStorage.removeItem('authToken');
+            // Redirect to login page
+            window.location.href = '/login';
 
-        // Clear user data
-        localStorage.removeItem('userData');
-
-        // Redirect to login page (or home)
-        navigate('/');
-
-        console.log('User logged out successfully');
+            console.log('User logged out successfully');
+        } catch (error) {
+            console.error('Logout error:', error);
+        }
     };
 
     useEffect(() => {
