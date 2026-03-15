@@ -6,8 +6,7 @@ import { getUserProfile } from '../../utils/storage';
 const NAV_ITEMS = [
     { icon: '🏠', label: 'Home', path: '/' },
     { icon: '📝', label: 'Journal', path: '/journal' },
-    { icon: '📆', label: 'Sessions', path: '/sessions' },
-    { icon: '⭐', label: 'Exercises', path: '/exercises' },
+    { icon: '💬', label: 'Chat', path: '/chat' },
     { icon: '📊', label: 'Progress', path: '/progress' },
     { icon: '⚙', label: 'Settings', path: '/settings' }
 ];
@@ -32,8 +31,7 @@ const Sidebar = () => {
     return (
         <aside className={styles.sidebar}>
             <div className={styles.logo}>
-                {/* TODO: LOGO */}
-                LOGO<span className={styles.logoAccent}>.</span>
+                Dear AI-ry<span className={styles.logoAccent}>.</span>
             </div>
 
             <nav className={styles.nav}>
