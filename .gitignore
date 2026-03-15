@@ -9,6 +9,10 @@
 *.user
 *.userosscache
 *.sln.docstates
+# environment variables
+keys/
+.env
+.env.*
 *.env
 
 # User-specific files (MonoDevelop/Xamarin Studio)
@@ -416,3 +420,9 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
