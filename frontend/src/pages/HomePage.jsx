@@ -7,10 +7,22 @@ import MoodCheckIn from '../features/home/components/MoodCheckIn.jsx';
 import JournalPrompt from '../features/home/components/JournalPrompt.jsx';
 import ExerciseList from '../features/home/components/ExerciseList.jsx';
 import ProgressTracker from '../features/home/components/ProgressTracker.jsx';
+import { useNavigate } from 'react-router-dom';
+import { getUserProfile } from '../utils/storage';
+
+
+const STATS = [
+  { label: 'Check-in streak', value: '2', sub: '↑ days in a row', positive: true },
+  { label: 'Sessions done', value: '5', sub: 'this month', positive: false },
+  { label: 'Journal entries', value: '5', sub: 'total entries', positive: false },
+  { label: 'Mood average', value: '7.2', sub: '↑ up this week', positive: true },
+];
 
 const HomePage = () => {
   const navigate = useNavigate();
   const { user, token } = useContext(AuthContext);
+  const { name } = getUserProfile();
+  const firstName = name?.split(' ')[0] || 'there';
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -97,7 +109,7 @@ const HomePage = () => {
         <div>
           <p className={styles.greeting}>Good morning!</p>
           <h1 className={styles.title}>
-            How are you <em>feeling</em> today?
+            How are you <em>feeling</em> today, {firstName}?
           </h1>
         </div>
 
