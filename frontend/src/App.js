@@ -6,7 +6,9 @@ import HomePage from './pages/HomePage.jsx';
 import JournalPage from './pages/JournalPage.jsx';
 import SessionsPage from './pages/SessionsPage.jsx';
 import ExercisesPage from './pages/ExercisesPage.jsx';
+import ChatPage from './pages/ChatPage.jsx';
 import ProgressPage from './pages/ProgressPage.jsx';
+import SettingsPage from './pages/SettingsPage';
 import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 
@@ -31,6 +33,8 @@ function App() {
                     <Route path="/sessions" element={<SessionsPage />} />
                     <Route path="/exercises" element={<ExercisesPage />} />
                     <Route path="/progress" element={<ProgressPage />} />
+                    <Route path="/chat" element={<ChatPage />} />
+                    <Route path="/settings" element={<SettingsPage />} />
                     {/* Catch all - redirect to home */}
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>

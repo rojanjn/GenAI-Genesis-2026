@@ -43,7 +43,7 @@ app.add_middleware(
 )
 
 # Register routers
-app.include_router(auth_router, tags=["Authentication"])
+app.include_router(auth_router, prefix="/api", tags=["Authentication"])
 app.include_router(diary_router, prefix="/api", tags=["Diary"])
 app.include_router(moods_router, prefix="/api", tags=["Moods"])
 app.include_router(chat_router, prefix="/api", tags=["Chat"])
@@ -53,7 +53,7 @@ app.include_router(insights_router, prefix="/api", tags=["Insights"])
 def startup_event():
     init_firebase()
     logger.info("✓ Firebase initialised")
-    
+
     try:
         start_background_tasks()
         logger.info("✓ Background tasks started")
