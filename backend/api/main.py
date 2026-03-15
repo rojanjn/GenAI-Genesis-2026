@@ -26,8 +26,6 @@ app = FastAPI(
 cors_origins = [
     "http://localhost:3000",  # React development
     "http://127.0.0.1:3000",
-    "http://localhost:3001",  # React development (alternative port)
-    "http://127.0.0.1:3001",
     "http://localhost:5173",  # Vite development
     "http://127.0.0.1:5173",
 ]
@@ -55,7 +53,7 @@ app.include_router(insights_router, prefix="/api", tags=["Insights"])
 def startup_event():
     init_firebase()
     logger.info("✓ Firebase initialised")
-    
+
     try:
         start_background_tasks()
         logger.info("✓ Background tasks started")
