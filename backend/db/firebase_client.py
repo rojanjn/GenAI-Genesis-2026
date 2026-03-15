@@ -15,7 +15,6 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from typing import Optional, Any
 from dotenv import load_dotenv
-from pathlib import Path
 load_dotenv()
 
 _db: Optional[Any] = None # Wildcard datatype for flexibility, but ideally should be firestore.client.Client. Why is this not working? Is it a circular import issue?
