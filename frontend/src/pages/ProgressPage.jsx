@@ -1,129 +1,222 @@
+import { useContext, useEffect, useState } from 'react';
 import styles from './ProgressPage.module.css';
-import { getProgress, getMoodEntries } from '../utils/storage.js';
+import { AuthContext } from '../contexts/AuthContext';
 
-const MOOD_HISTORY = [
-    { day: 'Mon', value: 6 },
-    { day: 'Tue', value: 7 },
-    { day: 'Wed', value: 5 },
-    { day: 'Thu', value: 8 },
-    { day: 'Fri', value: 7 },
-    { day: 'Sat', value: 9 },
-    { day: 'Sun', value: 7 },
-];
-
-const MAX_MOOD = 10;
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000';
 
 const ProgressPage = () => {
-    const progress = getProgress();
+    const { token } = useContext(AuthContext);
 
-    const STATS = [
-        { label: 'Check-in streak', value: String(progress.checkInStreak), sub: 'days in a row' },
-        { label: 'Total sessions', value: String(progress.sessionsDone), sub: 'this month' },
-        { label: 'Journal entries', value: String(progress.journalCount), sub: 'all time' },
-        { label: 'Avg mood score', value: '7.2', sub: 'this week' },
-    ];
+    const [entryType, setEntryType] = useState('diary');
+    const [item, setItem] = useState(null);
+    const [currentId, setCurrentId] = useState(null);
+    const [meta, setMeta] = useState({
+        hasPrevious: false,
+        hasNext: false,
+        position: 0,
+        total: 0,
+    });
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const GOALS = [
-        { label: 'Weekly check-ins', current: progress.weeklyCheckIns, total: 5 },
-        { label: 'Journal entries', current: progress.weeklyJournals, total: 7 },
-        { label: 'Exercises done', current: progress.weeklyExercises, total: 4 },
-    ];
+    const fetchHistoryItem = async ({ type = entryType, direction = 'current', id = null } = {}) => {
+        if (!token) {
+            setError('No auth token found.');
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const isDiary = type === 'diary';
+            const endpoint = isDiary
+                ? `${API_BASE_URL}/api/history/diary/nav`
+                : `${API_BASE_URL}/api/history/moods/nav`;
+
+            const params = new URLSearchParams();
+            params.append('direction', direction);
+
+            if (isDiary && id) {
+                params.append('current_entry_id', id);
+            }
+
+            if (!isDiary && id) {
+                params.append('current_mood_id', id);
+            }
+
+            const response = await fetch(`${endpoint}?${params.toString()}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.detail || 'Failed to load history.');
+            }
+
+            if (isDiary) {
+                setItem(data.entry);
+                setCurrentId(data.entry?.entry_id || null);
+                setMeta({
+                    hasPrevious: data.has_previous,
+                    hasNext: data.has_next,
+                    position: data.position,
+                    total: data.total,
+                });
+            } else {
+                setItem(data.mood);
+                setCurrentId(data.mood?.mood_id || null);
+                setMeta({
+                    hasPrevious: data.has_previous,
+                    hasNext: data.has_next,
+                    position: data.position,
+                    total: data.total,
+                });
+            }
+        } catch (err) {
+            console.error('History fetch failed:', err);
+            setError(err.message || 'Failed to load history.');
+            setItem(null);
+            setCurrentId(null);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        setItem(null);
+        setCurrentId(null);
+        setMeta({
+            hasPrevious: false,
+            hasNext: false,
+            position: 0,
+            total: 0,
+        });
+
+        fetchHistoryItem({
+            type: entryType,
+            direction: 'current',
+            id: null,
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [entryType, token]);
+
+    const goPrevious = () => {
+        if (!currentId || !meta.hasPrevious || loading) return;
+        fetchHistoryItem({
+            type: entryType,
+            direction: 'previous',
+            id: currentId,
+        });
+    };
+
+    const goNext = () => {
+        if (!currentId || !meta.hasNext || loading) return;
+        fetchHistoryItem({
+            type: entryType,
+            direction: 'next',
+            id: currentId,
+        });
+    };
+
+    const formatTimestamp = (timestamp) => {
+        if (!timestamp) return 'No date';
+        const parsed = new Date(timestamp);
+        if (Number.isNaN(parsed.getTime())) return 'No date';
+        return parsed.toLocaleString();
+    };
 
     return (
         <div className={styles.page}>
             <div className={styles.topbar}>
-                <div>
-                    <p className={styles.label}>Progress</p>
-                    <h1 className={styles.title}>Your growth, <em>visualized.</em></h1>
+                <h1 className={styles.title}>Your history</h1>
+
+                <div className={styles.tabGroup}>
+                    <button
+                        type="button"
+                        className={`${styles.tabButton} ${entryType === 'diary' ? styles.tabButtonActive : ''}`}
+                        onClick={() => setEntryType('diary')}
+                    >
+                        Journal
+                    </button>
+
+                    <button
+                        type="button"
+                        className={`${styles.tabButton} ${entryType === 'moods' ? styles.tabButtonActive : ''}`}
+                        onClick={() => setEntryType('moods')}
+                    >
+                        Mood
+                    </button>
                 </div>
             </div>
 
             <div className={styles.content}>
+                {loading && <p className={styles.message}>Loading…</p>}
 
-                {/* Stats strip */}
-                <div className={styles.statsGrid}>
-                    {STATS.map((s) => (
-                        <div key={s.label} className={styles.statCard}>
-                            <p className={styles.statLabel}>{s.label}</p>
-                            <p className={styles.statValue}>{s.value}</p>
-                            <p className={styles.statSub}>{s.sub}</p>
-                        </div>
-                    ))}
-                </div>
+                {!loading && error && <p className={styles.error}>{error}</p>}
 
-                <div className={styles.grid}>
-
-                    {/* Mood chart */}
+                {!loading && !error && item && (
                     <div className={styles.card}>
-                        <div className={styles.cardHeader}>
-                            <p className={styles.cardTitle}>Mood this week</p>
-                            <span className={styles.cardSub}>Scale of 1–10</span>
-                        </div>
-                        <div className={styles.chart}>
-                            {MOOD_HISTORY.map((m) => (
-                                <div key={m.day} className={styles.bar}>
-                                    <div className={styles.barInner}>
-                                        <div
-                                            className={styles.barFill}
-                                            style={{ height: `${(m.value / MAX_MOOD) * 100}%` }}
-                                        />
-                                    </div>
-                                    <span className={styles.barVal}>{m.value}</span>
-                                    <span className={styles.barDay}>{m.day}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                        <p className={styles.date}>
+                            {formatTimestamp(item.timestamp)}
+                        </p>
 
-                    {/* Weekly goals */}
-                    <div className={styles.card}>
-                        <div className={styles.cardHeader}>
-                            <p className={styles.cardTitle}>Weekly goals</p>
-                            <span className={styles.cardSub}>March 10 – 16</span>
-                        </div>
-                        {GOALS.map((g) => (
-                            <div key={g.label} className={styles.goalBlock}>
-                                <div className={styles.goalRow}>
-                                    <span className={styles.goalLabel}>{g.label}</span>
-                                    <span className={styles.goalVal}>{g.current} / {g.total}</span>
-                                </div>
-                                <div className={styles.barBg}>
-                                    <div
-                                        className={styles.barProgress}
-                                        style={{ width: `${(g.current / g.total) * 100}%` }}
-                                    />
-                                </div>
+                        {entryType === 'diary' ? (
+                            <div className={styles.entryBlock}>
+                                <p className={styles.text}>
+                                    {item.plain_text || item.text || 'No journal text found.'}
+                                </p>
                             </div>
-                        ))}
-                    </div>
+                        ) : (
+                            <div className={styles.entryBlock}>
+                                <p className={styles.moodLine}>
+                                    <strong>Mood:</strong> {item.mood || 'Unknown'}
+                                </p>
+                                <p className={styles.moodLine}>
+                                    <strong>Intensity:</strong> {item.intensity ?? 'N/A'}
+                                </p>
+                                <p className={styles.moodLine}>
+                                    <strong>Date:</strong> {item.date || 'No date saved'}
+                                </p>
+                                <p className={styles.moodLine}>
+                                    <strong>Note:</strong> {item.note || 'No note'}
+                                </p>
+                            </div>
+                        )}
 
+                        <div className={styles.position}>
+                            Entry {meta.total === 0 ? 0 : meta.position + 1} of {meta.total}
+                        </div>
+                    </div>
+                )}
+
+                {!loading && !error && !item && (
+                    <p className={styles.message}>No history found.</p>
+                )}
+
+                <div className={styles.navButtons}>
+                    <button
+                        type="button"
+                        onClick={goPrevious}
+                        disabled={!meta.hasPrevious || loading}
+                        className={styles.navButton}
+                    >
+                        ← Previous
+                    </button>
+
+                    <button
+                        type="button"
+                        onClick={goNext}
+                        disabled={!meta.hasNext || loading}
+                        className={styles.navButton}
+                    >
+                        Next →
+                    </button>
                 </div>
-
-                {/* Streak calendar */}
-                <div className={styles.card} style={{ marginTop: '20px' }}>
-                    <div className={styles.cardHeader}>
-                        <p className={styles.cardTitle}>Check-in streak</p>
-                        <span className={styles.cardSub}>March 2026</span>
-                    </div>
-                    <div className={styles.calendar}>
-                        {Array.from({ length: 31 }, (_, i) => {
-                            const day = i + 1;
-                            const done = progress.checkedInDays.includes(
-                                new Date(2026, 2, day).toDateString()
-                            );
-                            const today = day === new Date().getDate();
-                            return (
-                                <div
-                                    key={day}
-                                    className={`${styles.calDay} ${done ? styles.calDone : ''} ${today ? styles.calToday : ''}`}
-                                >
-                                    {day}
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-
             </div>
         </div>
     );

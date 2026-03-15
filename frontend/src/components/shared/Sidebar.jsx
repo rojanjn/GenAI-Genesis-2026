@@ -8,7 +8,7 @@ const NAV_ITEMS = [
     { icon: '🏠', label: 'Home', path: '/' },
     { icon: '📝', label: 'Journal', path: '/journal' },
     { icon: '💬', label: 'Chat', path: '/chat' },
-    { icon: '📊', label: 'Progress', path: '/progress' },
+    { icon: '📊', label: 'History', path: '/progress' },
     { icon: '⚙', label: 'Settings', path: '/settings' }
 ];
 
