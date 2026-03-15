@@ -208,7 +208,7 @@ const ChatPage = () => {
                     </button>
                 </div>
                 <p className={styles.disclaimer}>
-                    sōl is not a substitute for professional mental health care.
+                    My AI-ry is an AI support tool and is not a substitute for professional mental health care, diagnosis, or treatment. It is inspired by motivational interviewing principles and research on chatbot-assisted smoking cessation conducted by Professor Jonathan Rose at the University of Toronto.
                 </p>
             </div>
         </div>
