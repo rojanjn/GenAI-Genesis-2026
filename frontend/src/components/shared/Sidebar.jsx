@@ -3,7 +3,6 @@ import { NavLink } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getUserProfile } from '../../utils/storage';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
 const NAV_ITEMS = [
     { icon: '🏠', label: 'Home', path: '/' },
