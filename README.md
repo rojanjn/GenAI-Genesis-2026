@@ -1,4 +1,6 @@
-# GenAI-Genesis-2026 🧠✨
+# Dear AI-ry 🧠✨
+
+For GenAI-Genesis-2026
 
 An AI-powered journaling companion MVP that uses semantic embeddings to retrieve similar past journal entries and provide reflective, personalized responses based on mood analysis and long-term user memory.
 
