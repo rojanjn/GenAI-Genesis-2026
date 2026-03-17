@@ -225,8 +225,7 @@ const ChatPage = () => {
                     </button>
                 </div>
                 <p className={styles.disclaimer}>
-                    sōl is not a substitute for professional mental health care.
-                </p>
+                    Dear AI-ry is not a substitute for professional mental health care. Its responses draw on motivational interviewing principles, inspired by research by Prof. Jonathan Rose at the University of Toronto on chatbot-based smoking cessation.                </p>
             </div>
         </div>
     );
