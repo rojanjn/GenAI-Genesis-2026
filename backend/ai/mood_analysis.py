@@ -39,7 +39,19 @@ def analyse_mood(entry_text: str) -> MoodAnalysisResult:
     ]
 
     for _ in range(2):
-        raw_response = chat_completion(messages, max_tokens=600, temperature=0.1)
+        try:
+            raw_response = chat_completion(messages, max_tokens=600, temperature=0.1)
+        except Exception as e:
+            error_msg = str(e)
+
+            if "endpoint is paused" in error_msg or "400" in error_msg:
+                raise RuntimeError(
+                    "API endpoint is down or paused.\n"
+                    "👉 Update or restart your Hugging Face endpoint URL in mood_analysis.py.\n"
+                    "Current endpoint is not active."
+                )
+
+            raise e
 
         print("Raw mood response:")
         print(raw_response)
